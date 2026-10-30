@@ -9,7 +9,6 @@ export const MODES = {
   mix: { name: 'Cộng trừ', short: 'Cộng trừ', sym: '➕➖', cls: 'm-mix' },
 };
 
-export const EMOJI = ['🍎', '🍓', '🐥', '🌸', '⭐', '🎈', '🐟', '🍭', '🦋', '🧁'];
 export const PRAISE = ['Giỏi quá!', 'Đúng rồi!', 'Tuyệt vời!', 'Siêu quá!', 'Hay lắm!', 'Xuất sắc!'];
 
 export function starsFor(correct) {

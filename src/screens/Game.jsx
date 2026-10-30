@@ -1,31 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import TopBar from '../components/TopBar.jsx';
 import Confetti from '../components/Confetti.jsx';
-import { EMOJI, LEVELS, MODES, POINTS, PRAISE, QUESTIONS, starsFor } from '../config.js';
+import { LEVELS, MODES, POINTS, PRAISE, QUESTIONS, starsFor } from '../config.js';
 import { buildLevel, questionSpeech, rnd } from '../questions.js';
 import { sfx, speak } from '../sound.js';
-
-// Hình minh hoạ để bé đếm khi các số đều nhỏ (≤ 10)
-function Visual({ q }) {
-  const emoji = useMemo(() => EMOJI[rnd(0, EMOJI.length - 1)], [q]);
-  if (q.nums.length !== 2 || Math.max(...q.nums) > 10) return null;
-  const [a, b] = q.nums;
-  if (q.ops[0] === '+') {
-    return (
-      <div className="visual">
-        <span className="grp">{emoji.repeat(a) || ' '}</span> + <span className="grp">{emoji.repeat(b) || ' '}</span>
-      </div>
-    );
-  }
-  return (
-    <div className="visual">
-      <span className="grp">
-        {emoji.repeat(a - b)}
-        <span className="gone">{emoji.repeat(b)}</span>
-      </span>
-    </div>
-  );
-}
 
 export default function Game({ mode, levelIdx, onQuit, onFinish, ...bar }) {
   const max = LEVELS[levelIdx];
@@ -117,7 +95,6 @@ export default function Game({ mode, levelIdx, onQuit, onFinish, ...bar }) {
           ))}{' '}
           <span className="op">=</span> <span className="q">{solved ? q.ans : '?'}</span>
         </div>
-        <Visual q={q} />
       </div>
       <div className="answers">
         {q.choices.map((v) => (
