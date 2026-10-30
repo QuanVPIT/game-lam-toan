@@ -174,7 +174,7 @@ button {
 .m-sub {
   background: var(--orange);
 }
-.m-mix {
+.m-cmp {
   background: var(--purple);
 }
 .resetbtn {
@@ -287,6 +287,28 @@ button {
   display: inline-block;
   min-width: 1.2em;
   border-bottom: 6px dashed var(--blue);
+}
+.question .box {
+  border: 6px dashed var(--blue);
+  border-radius: 20px;
+  min-width: 1.3em;
+  padding: 0 0.15em;
+  margin: 0 0.15em;
+}
+.question .box.done {
+  border-style: solid;
+  border-color: var(--green);
+  color: var(--green);
+}
+.answers.cmp {
+  grid-template-columns: repeat(3, 1fr);
+}
+.ans small {
+  display: block;
+  font-size: clamp(16px, 4vw, 22px);
+  line-height: 1;
+  margin: -4px 0 6px;
+  opacity: 0.95;
 }
 .speak {
   position: absolute;

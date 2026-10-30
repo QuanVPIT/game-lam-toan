@@ -1,6 +1,6 @@
 # Bé Học Toán 🦄
 
-Game làm toán cho bé lớp 1 (Nhã Đan): phép cộng, phép trừ, cộng trừ kết hợp, 10 level (10 → 100), có âm thanh, giọng đọc tiếng Việt và lưu điểm.
+Game làm toán cho bé lớp 1 (Nhã Đan): phép cộng (tổng đến 99), phép trừ (số trừ tối đa 10), so sánh điền dấu > < = (phạm vi 99). Mỗi loại có 10 level (10 → 99), có âm thanh, lời khen, giọng đọc tiếng Việt và lưu điểm.
 
 Chơi online: https://quanvpit.github.io/game-lam-toan/
 

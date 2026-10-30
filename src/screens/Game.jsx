@@ -1,12 +1,15 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import TopBar from '../components/TopBar.jsx';
 import Confetti from '../components/Confetti.jsx';
-import { LEVELS, MODES, POINTS, PRAISE, QUESTIONS, starsFor } from '../config.js';
-import { buildLevel, questionSpeech, rnd } from '../questions.js';
+import { ENCOURAGE, LEVELS, MODES, POINTS, PRAISE, QUESTIONS, starsFor } from '../config.js';
+import { buildLevel, CMP_LABEL, questionSpeech, rnd } from '../questions.js';
 import { sfx, speak } from '../sound.js';
+
+const pick = (list) => list[rnd(0, list.length - 1)];
 
 export default function Game({ mode, levelIdx, onQuit, onFinish, ...bar }) {
   const max = LEVELS[levelIdx];
+  const isCmp = mode === 'cmp';
   const questions = useMemo(() => buildLevel(mode, max, QUESTIONS), [mode, max]);
   const [i, setI] = useState(0);
   const [correct, setCorrect] = useState(0);
@@ -28,7 +31,7 @@ export default function Game({ mode, levelIdx, onQuit, onFinish, ...bar }) {
     return () => clearTimeout(timer.current);
   }, []);
 
-  const pick = (v) => {
+  const choose = (v) => {
     if (solved || wrongs.includes(v)) return;
     if (v === q.ans) {
       const firstTry = wrongs.length === 0;
@@ -37,10 +40,10 @@ export default function Game({ mode, levelIdx, onQuit, onFinish, ...bar }) {
       setCorrect(newCorrect);
       setScore(newScore);
       setSolved(true);
-      const p = PRAISE[rnd(0, PRAISE.length - 1)];
+      const p = pick(PRAISE);
       setFeedback({ ok: true, text: `${p} 🎉` });
       sfx.right();
-      speak(p);
+      setTimeout(() => speak(p, { cheer: true }), 250);
       setFire((f) => f + 1);
       timer.current = setTimeout(() => {
         if (i + 1 >= QUESTIONS) {
@@ -51,14 +54,17 @@ export default function Game({ mode, levelIdx, onQuit, onFinish, ...bar }) {
           setSolved(false);
           setFeedback(null);
         }
-      }, 1300);
+      }, 2000);
     } else {
+      const e = pick(ENCOURAGE);
       setWrongs([...wrongs, v]);
-      setFeedback({ ok: false, text: 'Chưa đúng, thử lại nhé! 💪' });
+      setFeedback({ ok: false, text: `${e} 💪` });
       sfx.wrong();
-      speak('Thử lại nhé');
+      setTimeout(() => speak(e), 250);
     }
   };
+
+  const [a, b] = q.nums;
 
   return (
     <section className="screen">
@@ -84,32 +90,34 @@ export default function Game({ mode, levelIdx, onQuit, onFinish, ...bar }) {
         </button>
         <div className="qnum">
           Câu {i + 1}/{QUESTIONS}
+          {isCmp && ' · Điền dấu > < ='}
         </div>
-        <div className="question">
-          {q.nums[0]}
-          {q.ops.map((o, j) => (
-            <span key={j}>
-              {' '}
-              <span className="op">{o === '-' ? '−' : '+'}</span> {q.nums[j + 1]}
-            </span>
-          ))}{' '}
-          <span className="op">=</span> <span className="q">{solved ? q.ans : '?'}</span>
-        </div>
+        {isCmp ? (
+          <div className="question">
+            {a} <span className={`q box${solved ? ' done' : ''}`}>{solved ? q.ans : '?'}</span> {b}
+          </div>
+        ) : (
+          <div className="question">
+            {a} <span className="op">{q.op === '-' ? '−' : '+'}</span> {b} <span className="op">=</span>{' '}
+            <span className="q">{solved ? q.ans : '?'}</span>
+          </div>
+        )}
       </div>
-      <div className="answers">
+      <div className={`answers${isCmp ? ' cmp' : ''}`}>
         {q.choices.map((v) => (
           <button
             key={`${i}-${v}`}
             className={`ans${wrongs.includes(v) ? ' wrong' : ''}${solved && v === q.ans ? ' right' : ''}`}
             disabled={wrongs.includes(v)}
-            onClick={() => pick(v)}
+            onClick={() => choose(v)}
           >
             {v}
+            {isCmp && <small>{CMP_LABEL[v]}</small>}
           </button>
         ))}
       </div>
       <div className={`feedback ${feedback ? (feedback.ok ? 'ok' : 'no') : ''}`}>{feedback?.text}</div>
-      <Confetti fire={fire} count={6} />
+      <Confetti fire={fire} count={8} />
     </section>
   );
 }

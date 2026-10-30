@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { rnd } from '../questions.js';
 
 const ITEMS = ['🎉', '⭐', '🌟', '🎈', '💖', '🍬', '✨'];
+let nextId = 0;
 
 // Mỗi lần `fire` thay đổi sẽ bắn ra `count` hạt pháo giấy
 export default function Confetti({ fire, count = 8 }) {
@@ -9,8 +10,8 @@ export default function Confetti({ fire, count = 8 }) {
 
   useEffect(() => {
     if (!fire) return;
-    const batch = Array.from({ length: count }, (_, i) => ({
-      id: `${fire}-${i}`,
+    const batch = Array.from({ length: count }, () => ({
+      id: nextId++,
       ch: ITEMS[rnd(0, ITEMS.length - 1)],
       left: rnd(0, 96),
       dur: 1.6 + Math.random() * 1.8,
